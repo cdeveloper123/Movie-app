@@ -4,6 +4,7 @@ import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { toaster, toasterError } from "@/app/auth/components/Toaster";
+import Loader from "../../components/Loader";
 
 const MoviesCreate = () => {
   const router = useRouter();
@@ -17,6 +18,7 @@ const MoviesCreate = () => {
   const [publishingYearError, setPublishingYearError] = useState("");
   const [title, setTitle] = useState("");
   const [publishingYear, setPublishingYear] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleDrop = (event) => {
     event.preventDefault();
@@ -54,29 +56,46 @@ const MoviesCreate = () => {
     }
   };
 
-  const handleSubmit = async () => {
+  const validatePoster = () => {
     if (!poster) {
-      setPosterError("Poster can't be blank");
-    } else {
-      setPosterError("");
+      setPosterError("Poster must not be blank");
+      return false;
     }
-    if (title === "") {
-      setTitleError("Title can't be blank");
-    } else {
-      setTitleError("");
-    }
-    if (publishingYear === "") {
-      setPublishingYearError("Publishing Year can't be blank");
-    } else {
-      setPublishingYearError("");
-    }
-    console.log("hereeee", posterError || titleError || publishingYearError);
+    return true;
+  };
 
-    if (posterError || titleError || publishingYearError) {
-      return;
+  const validateTitle = () => {
+    if (title == "") {
+      validatePublishingYear();
+      setTitleError("Title must not be blank");
+      return false;
     }
+    return true;
+  };
 
+  const validatePublishingYear = () => {
+    if (publishingYear == "") {
+      setPublishingYearError("Publishing year must not be blank");
+      return false;
+    }
+    return true;
+  };
+
+  const validateForm = () => {
+    return validatePoster() && validateTitle() && validatePublishingYear();
+  };
+
+  const handleSubmit = async () => {
     try {
+      setPosterError("");
+      setTitleError("");
+      setPublishingYearError("");
+
+      if (!validateForm()) {
+        return;
+      }
+
+      setLoading(true);
       const formData = new FormData();
       formData.append("title", title);
       formData.append("publishingYear", publishingYear);
@@ -89,11 +108,14 @@ const MoviesCreate = () => {
 
       if (response.ok) {
         toaster("Movie created successfully");
+        setLoading(false);
         router.push("/");
       } else {
+        setLoading(false);
         toasterError("Failed to create movie");
       }
     } catch (error) {
+      setLoading(false);
       console.error("Error:", error);
     }
   };
@@ -244,11 +266,13 @@ const MoviesCreate = () => {
               </button>
               <button
                 onClick={handleSubmit}
+                disabled={loading ? true : false}
                 className="w-[171px] h-14 items-center px-6 py-4 rounded-[10px] bg-[#2BD17E] text-white font-bold text-base text-center"
               >
                 Submit
               </button>
             </div>
+            {loading && <Loader />}
           </div>
         </div>
       </div>

@@ -1,17 +1,17 @@
 "use client";
-
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { toaster, toasterError } from "@/app/auth/components/Toaster";
+import Loader from "../../components/Loader";
 
 export default function MovieEditor() {
   const router = useRouter();
   const pathname = usePathname();
   const movieId = pathname.replace(/^\/movies\//, "");
   const [movie, setMovie] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(null);
   const [poster, setPoster] = useState(null);
 
@@ -26,6 +26,7 @@ export default function MovieEditor() {
 
   useEffect(() => {
     if (movieId) {
+      setLoading(true);
       const fetchMovie = async () => {
         const res = await fetch(`/api/movies/${movieId}`);
         if (res.ok) {
@@ -35,6 +36,7 @@ export default function MovieEditor() {
           setPublishingYear(data?.publishingYear);
           setLoading(false);
         } else {
+          setLoading(false);
           console.error("Failed to fetch movie data");
         }
       };
@@ -114,7 +116,7 @@ export default function MovieEditor() {
       if (!validateForm()) {
         return;
       }
-
+      setLoading(true);
       const movie = {
         title: title,
         publishingYear: publishingYear,
@@ -137,16 +139,23 @@ export default function MovieEditor() {
 
       if (response.ok) {
         toaster("Movie Edited successfully!");
+        setLoading(false);
       } else {
         toasterError("Failed to edit movie");
+        setLoading(false);
       }
     } catch (error) {
       console.error("Error submitting form:", error);
+      setLoading(false);
     }
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
   }
 
   return (
@@ -286,11 +295,13 @@ export default function MovieEditor() {
               </button>
               <button
                 onClick={handleSubmit}
+                disabled={loading ? true : false}
                 className="w-full sm:w-[250px] h-14 px-6 py-4 rounded-[10px] bg-[#2BD17E] text-white font-bold text-base text-center"
               >
                 Update
               </button>
             </div>
+            {loading && <Loader />}
           </div>
         </div>
       </div>
