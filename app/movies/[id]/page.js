@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { toaster, toasterError } from "@/app/auth/components/Toaster";
 import Loader from "../../components/Loader";
+import nookies from "nookies";
 
 export default function MovieEditor() {
   const router = useRouter();
@@ -23,6 +24,35 @@ export default function MovieEditor() {
   const [titleError, setTitleError] = useState("");
   const [publishingYearError, setPublishingYearError] = useState("");
   const fileInputRef = useRef(null);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const cookies = nookies.get();
+    const email = cookies.email;
+    fetchUserData(email);
+    console.log("Email from cookie:", email);
+  }, []);
+
+  const fetchUserData = async (email) => {
+    try {
+      const response = await fetch("/api/auth/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.status === 200) {
+        const userData = await response.json();
+        setUser(userData);
+      } else {
+        const errorData = await response.json();
+      }
+    } catch (error) {
+    } finally {
+    }
+  };
 
   useEffect(() => {
     if (movieId) {
@@ -284,7 +314,7 @@ export default function MovieEditor() {
               </p>
             </div>
             <br />
-            <div className="flex sm:w-[80%] flex-col sm:flex-row justify-between sm:space-x-5 space-y-4 sm:space-y-0 lg:space-x-3.5 mx-auto">
+            <div className={`flex sm:w-[80%] flex-col sm:flex-row ${movie?.user == user ? "justify-between" :"justify-center"} sm:space-x-5 space-y-4 sm:space-y-0 lg:space-x-3.5 mx-auto`}>
               <button
                 onClick={() => {
                   router.push("/");
@@ -293,13 +323,15 @@ export default function MovieEditor() {
               >
                 Cancel
               </button>
-              <button
-                onClick={handleSubmit}
-                disabled={loading ? true : false}
-                className="w-full sm:w-[250px] h-14 px-6 py-4 rounded-[10px] bg-[#2BD17E] text-white font-bold text-base text-center"
-              >
-                Update
-              </button>
+              {movie?.user == user && (
+                <button
+                  onClick={handleSubmit}
+                  disabled={loading ? true : false}
+                  className="w-full sm:w-[250px] h-14 px-6 py-4 rounded-[10px] bg-[#2BD17E] text-white font-bold text-base text-center"
+                >
+                  Update
+                </button>
+              )}
             </div>
             {loading && <Loader />}
           </div>

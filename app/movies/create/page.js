@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { toaster, toasterError } from "@/app/auth/components/Toaster";
 import Loader from "../../components/Loader";
+import nookies from "nookies";
 
 const MoviesCreate = () => {
   const router = useRouter();
@@ -19,6 +20,37 @@ const MoviesCreate = () => {
   const [title, setTitle] = useState("");
   const [publishingYear, setPublishingYear] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const cookies = nookies.get();
+    const email = cookies.email;
+    fetchUserData(email);
+    console.log("Email from cookie:", email);
+  }, []);
+
+  const fetchUserData = async (email) => {
+    try {
+      const response = await fetch("/api/auth/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.status === 200) {
+        const userData = await response.json();
+        setUser(userData);
+      } else {
+        const errorData = await response.json();
+      }
+    } catch (error) {
+    } finally {
+    }
+  };
+  console.log("user", user);
 
   const handleDrop = (event) => {
     event.preventDefault();
@@ -99,6 +131,7 @@ const MoviesCreate = () => {
       const formData = new FormData();
       formData.append("title", title);
       formData.append("publishingYear", publishingYear);
+      formData.append("user", user);
       if (poster) formData.append("file", poster);
 
       const response = await fetch("/api/movies", {

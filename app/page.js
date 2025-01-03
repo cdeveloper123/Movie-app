@@ -18,6 +18,7 @@ export default function Home() {
   const logoutUser = async () => {
     await signOut();
     nookies.destroy(null, "isLoggedIn", { path: "/" });
+    nookies.destroy(null, "email", { path: "/" });
     await signOut();
   };
 
@@ -59,7 +60,7 @@ export default function Home() {
           <div className="flex justify-between flex-wrap my-16">
             <div className="flex items-center">
               <h2 className="text-white text-center text-2xl lg:text-5xl font-semibold leading-[56px]">
-                My Movies
+                All Movies
               </h2>
               <Image
                 src="/add_circle_outline_black.svg"

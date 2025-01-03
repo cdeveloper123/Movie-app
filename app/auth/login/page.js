@@ -84,6 +84,10 @@ export default function Login() {
           maxAge: 1 * 24 * 60 * 60,
           path: "/",
         });
+        nookies.set(null, "email", email, {
+          maxAge: 1 * 24 * 60 * 60,
+          path: "/",
+        });
         router.push("/");
       } else {
         setLoading(false);

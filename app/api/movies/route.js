@@ -3,6 +3,7 @@ import Movie from "@/models/Movie";
 import { v4 as uuidv4 } from "uuid";
 import cloudinary from "cloudinary";
 import { Readable } from "stream";
+import mongoose from "mongoose";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -44,11 +45,12 @@ export const POST = async (req) => {
         posterUrl,
       };
 
-      const { title, publishingYear } = movieData;
+      const { title, publishingYear, user } = movieData;
 
       const movie = await Movie.create({
         title,
         publishingYear,
+        user: new mongoose.Types.ObjectId(user),
         poster: posterUrl,
       });
 
@@ -78,6 +80,8 @@ export async function GET(req) {
 
   try {
     const skip = (page - 1) * limit;
+    const userId = url.searchParams.get("user");
+    const query = userId ? { user: new mongoose.Types.ObjectId(userId) } : {};
 
     const movies = await Movie.find().skip(skip).limit(limit);
 
