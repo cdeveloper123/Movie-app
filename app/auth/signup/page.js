@@ -193,7 +193,9 @@ export default function SignUp() {
               onClick={() => {
                 setPasswordVisible((prevState) => !prevState);
               }}
-              className="absolute right-4 sm:right-40 top-[50%] transform -translate-y-1/2 cursor-pointer"
+              className={`absolute right-4 sm:right-40 ${
+                errors.password ? "top-[33%]" : "top-[50%]"
+              } transform -translate-y-1/2 cursor-pointer`}
             >
               {passwordVisible ? (
                 <FaEye className="text-black text-2xl" />
@@ -223,7 +225,9 @@ export default function SignUp() {
               onClick={() => {
                 setConfirmPasswordVisible((prevState) => !prevState);
               }}
-              className="absolute right-4 sm:right-40 top-[50%] transform -translate-y-1/2 cursor-pointer"
+              className={`absolute right-4 sm:right-40 ${
+                errors.confirmPassword ? "top-[33%]" : "top-[50%]"
+              } transform -translate-y-1/2 cursor-pointer`}
             >
               {confirmPasswordVisible ? (
                 <FaEye className="text-black text-2xl" />

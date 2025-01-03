@@ -135,7 +135,9 @@ export default function Login() {
               onClick={() => {
                 setPasswordVisible((prevState) => !prevState);
               }}
-              className="absolute right-4 sm:right-20 top-[50%] transform -translate-y-1/2 cursor-pointer"
+              className={`absolute right-4 sm:right-20 ${
+                errors.password ? "top-[33%]" : "top-[50%]"
+              } transform -translate-y-1/2 cursor-pointer`}
             >
               {passwordVisible ? (
                 <FaEye className="text-black text-2xl" />
