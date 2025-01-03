@@ -18,7 +18,7 @@ export default function Home() {
   const logoutUser = async () => {
     await signOut();
     nookies.destroy(null, "isLoggedIn", { path: "/" });
-    await signOut({ callbackUrl: process.env.FRONTEND_URL });
+    await signOut();
   };
 
   const fetchMovies = async (page) => {
