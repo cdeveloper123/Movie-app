@@ -65,7 +65,8 @@ export default function SignUp() {
       setErrors((prevErrors) => ({ ...prevErrors, email: "" }));
     }
 
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{6,}$/;
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{6,}$/;
     if (isInputEmpty(signupData.password)) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -75,7 +76,8 @@ export default function SignUp() {
     } else if (!passwordRegex.test(signupData.password)) {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        password: "Password must be at least 6 characters long, contain one uppercase letter, one lowercase letter, and one special character.",
+        password:
+          "Password must be at least 6 characters long, contain one uppercase letter, one lowercase letter, and one special character.",
       }));
       isValid = false;
     } else {
@@ -138,19 +140,19 @@ export default function SignUp() {
 
   return (
     <div className="min-h-screen flex items-center justify-center z-20 relative">
-      <div className="w-80">
-        <h1 className="text-white text-center text-[64px] font-semibold leading-[80px]">
+      <div className="w-full max-w-[400px] sm:max-w-[500px] px-4 sm:px-6">
+        <h1 className="text-white text-center text-4xl sm:text-5xl font-semibold leading-[80px]">
           Sign up
         </h1>
 
-        <div className="mt-10 px-2">
+        <div className="mt-10">
           <div>
             <input
               type="text"
               onChange={(e) => onInputChange(e)}
               name="username"
               placeholder="Username"
-              className={`w-[300px] h-45 flex-shrink-0 p-2 pl-4 rounded-[10px] bg-[#224957] placeholder:text-white text-white ${
+              className={`w-full sm:w-[300px] h-12 p-2 pl-4 rounded-[10px] bg-[#224957] placeholder:text-white text-white ${
                 errors.username ? "border border-[#EB5757] caret-[#EB5757]" : ""
               }`}
               autoComplete="on"
@@ -160,13 +162,13 @@ export default function SignUp() {
             )}
           </div>
 
-          <div>
+          <div className="mt-6">
             <input
               type="text"
               onChange={(e) => onInputChange(e)}
               name="email"
               placeholder="Email"
-              className={`w-[300px] h-45 flex-shrink-0 p-2 pl-4 mt-6 rounded-[10px] bg-[#224957] placeholder:text-white text-white ${
+              className={`w-full sm:w-[300px] h-12 p-2 pl-4 rounded-[10px] bg-[#224957] placeholder:text-white text-white ${
                 errors.email ? "border border-[#EB5757] caret-[#EB5757]" : ""
               }`}
               autoComplete="on"
@@ -175,67 +177,60 @@ export default function SignUp() {
               <p className="text-[#EB5757] text-sm mt-1.5">{errors.email}</p>
             )}
           </div>
-          <div>
-            <div>
-              <div className="relative">
-                <input
-                  type={passwordVisible ? "text" : "password"}
-                  onChange={(e) => onInputChange(e)}
-                  name="password"
-                  placeholder="Password"
-                  className={`w-[300px] h-12 flex-shrink-0 p-2 pl-4 mt-6 rounded-[10px] bg-[#224957] placeholder:text-white text-white ${
-                    errors.password
-                      ? "border border-[#EB5757] caret-[#EB5757]"
-                      : ""
-                  }`}
-                  autoComplete="on"
-                />
-                <span
-                  onClick={() => {
-                    setPasswordVisible((prevState) => !prevState);
-                  }}
-                  className="absolute right-4 top-[65%] transform -translate-y-1/2 cursor-pointer"
-                >
-                  {passwordVisible ? (
-                    <FaEye className="text-black text-2xl" />
-                  ) : (
-                    <FaEyeSlash className="text-black text-2xl" />
-                  )}
-                </span>
-              </div>
-            </div>
+
+          <div className="mt-6 relative">
+            <input
+              type={passwordVisible ? "text" : "password"}
+              onChange={(e) => onInputChange(e)}
+              name="password"
+              placeholder="Password"
+              className={`w-full sm:w-[300px] h-12 p-2 pl-4 rounded-[10px] bg-[#224957] placeholder:text-white text-white ${
+                errors.password ? "border border-[#EB5757] caret-[#EB5757]" : ""
+              }`}
+              autoComplete="on"
+            />
+            <span
+              onClick={() => {
+                setPasswordVisible((prevState) => !prevState);
+              }}
+              className="absolute right-4 sm:right-40 top-[50%] transform -translate-y-1/2 cursor-pointer"
+            >
+              {passwordVisible ? (
+                <FaEye className="text-black text-2xl" />
+              ) : (
+                <FaEyeSlash className="text-black text-2xl" />
+              )}
+            </span>
             {errors.password && (
               <p className="text-[#EB5757] text-sm mt-1.5">{errors.password}</p>
             )}
           </div>
 
-          <div>
-            <div className="relative">
-              <input
-                type={confirmPasswordVisible ? "text" : "password"}
-                onChange={(e) => onInputChange(e)}
-                name="confirmPassword"
-                placeholder="Confirm Password"
-                className={`w-[300px] h-12 flex-shrink-0 p-2 pl-4 mt-6 rounded-[10px] bg-[#224957] placeholder:text-white text-white ${
-                  errors.confirmPassword
-                    ? "border border-[#EB5757] caret-[#EB5757]"
-                    : ""
-                }`}
-                autoComplete="on"
-              />
-              <span
-                onClick={() => {
-                  setConfirmPasswordVisible((prevState) => !prevState);
-                }}
-                className="absolute right-4 top-[65%] transform -translate-y-1/2 cursor-pointer"
-              >
-                {confirmPasswordVisible ? (
-                  <FaEye className="text-black text-2xl" />
-                ) : (
-                  <FaEyeSlash className="text-black text-2xl" />
-                )}
-              </span>
-            </div>
+          <div className="mt-6 relative">
+            <input
+              type={confirmPasswordVisible ? "text" : "password"}
+              onChange={(e) => onInputChange(e)}
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              className={`w-full sm:w-[300px] h-12 p-2 pl-4 rounded-[10px] bg-[#224957] placeholder:text-white text-white ${
+                errors.confirmPassword
+                  ? "border border-[#EB5757] caret-[#EB5757]"
+                  : ""
+              }`}
+              autoComplete="on"
+            />
+            <span
+              onClick={() => {
+                setConfirmPasswordVisible((prevState) => !prevState);
+              }}
+              className="absolute right-4 sm:right-40 top-[50%] transform -translate-y-1/2 cursor-pointer"
+            >
+              {confirmPasswordVisible ? (
+                <FaEye className="text-black text-2xl" />
+              ) : (
+                <FaEyeSlash className="text-black text-2xl" />
+              )}
+            </span>
             {errors.confirmPassword && (
               <p className="text-[#EB5757] text-sm mt-1.5">
                 {errors.confirmPassword}
@@ -245,7 +240,7 @@ export default function SignUp() {
 
           <button
             onClick={() => submitForm()}
-            className={`w-[300px] items-center gap-[5px] px-6 py-4 mt-6 rounded-[10px] bg-[#2BD17E] text-white font-bold text-base text-center`}
+            className={`w-full sm:w-[300px] mt-6 px-6 py-4 rounded-[10px] bg-[#2BD17E] text-white font-bold text-base text-center`}
             disabled={loading ? true : false}
           >
             Sign up
@@ -253,7 +248,7 @@ export default function SignUp() {
           {loading && <Loader />}
 
           <p className="text-center mt-4 text-white">
-            {`Already have an account? `}
+            Already have an account?{" "}
             <Link
               href="/auth/login"
               className="cursor-pointer text-teal-500 hover:text-teal-600 ml-0.5"

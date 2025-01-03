@@ -98,19 +98,19 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center z-20 relative">
-      <div className="w-80">
-        <h1 className="text-white text-center text-[64px] font-semibold leading-[80px]">
+      <div className="w-full max-w-[400px] px-4">
+        <h1 className="text-white text-center text-4xl sm:text-5xl md:text-6xl font-semibold leading-[80px]">
           Sign in
         </h1>
 
-        <div className="mt-10 px-2">
+        <div className="mt-10">
           <div>
             <input
               type="text"
               onChange={(e) => onInputChange(e)}
               name="email"
               placeholder="Email"
-              className={`w-[300px] h-45 flex-shrink-0 p-2 pl-4 rounded-[10px] bg-[#224957] placeholder:text-white text-white ${
+              className={`w-full sm:w-[300px] h-12 flex-shrink-0 p-2 pl-4 rounded-[10px] bg-[#224957] placeholder:text-white text-white ${
                 errors.email ? "border border-[#EB5757] caret-[#EB5757]" : ""
               }`}
               autoComplete="on"
@@ -120,13 +120,13 @@ export default function Login() {
             )}
           </div>
 
-          <div>
+          <div className="mt-6 relative">
             <input
               type={passwordVisible ? "text" : "password"}
               onChange={(e) => onInputChange(e)}
               name="password"
               placeholder="Password"
-              className={`w-[300px] h-12 flex-shrink-0 p-2 pl-4 mt-6 rounded-[10px] bg-[#224957] placeholder:text-white text-white ${
+              className={`w-full sm:w-[300px] h-12 flex-shrink-0 p-2 pl-4 rounded-[10px] bg-[#224957] placeholder:text-white text-white ${
                 errors.password ? "border border-[#EB5757] caret-[#EB5757]" : ""
               }`}
               autoComplete="on"
@@ -135,7 +135,7 @@ export default function Login() {
               onClick={() => {
                 setPasswordVisible((prevState) => !prevState);
               }}
-              className="relative left-[16rem] bottom-[2rem] transform -translate-y-1/2 cursor-pointer"
+              className="absolute right-4 sm:right-20 top-[50%] transform -translate-y-1/2 cursor-pointer"
             >
               {passwordVisible ? (
                 <FaEye className="text-black text-2xl" />
@@ -143,16 +143,17 @@ export default function Login() {
                 <FaEyeSlash className="text-black text-2xl" />
               )}
             </span>
+
             {errors.password && (
               <p className="text-[#EB5757] text-sm mt-1.5">{errors.password}</p>
             )}
           </div>
 
-          <div className="flex justify-center items-center mb-6 mt-6">
+          <div className="flex items-center mt-6">
             <input
               type="checkbox"
               id="rememberMe"
-              className="w-5 h-5 mr-2 flex-shrink-0 border round accent-[#224957] border-white rounded-[5px] checked:bg-[#000] checked:border-transparent cursor-pointer"
+              className="w-5 h-5 mr-2 flex-shrink-0 border rounded-[5px] accent-[#224957] border-white cursor-pointer"
             />
             <label
               htmlFor="rememberMe"
@@ -165,14 +166,14 @@ export default function Login() {
           <button
             onClick={() => handleLogin()}
             disabled={loading ? true : false}
-            className={`w-[300px] items-center gap-[5px] px-6 py-4 rounded-[10px] bg-[#2BD17E] text-white font-bold text-base text-center`}
+            className="w-full sm:w-[300px] mt-6 px-6 py-4 rounded-[10px] bg-[#2BD17E] text-white font-bold text-base text-center"
           >
             Log in
           </button>
           {loading && <Loader />}
 
           <p className="text-center mt-4 text-white">
-            {`Don't have an account? `}
+            Don't have an account?{" "}
             <Link
               href={"/auth/signup"}
               className="cursor-pointer text-teal-500 hover:text-teal-600 ml-0.5"
