@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import nookies from "nookies";
 import { toaster, toasterError } from "../components/Toaster.js";
+import Link from "next/link.js";
 
 export default function Login() {
   const router = useRouter();
@@ -92,7 +93,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center z-20 relative">
       <div className="w-80">
         <h1 className="text-white text-center text-[64px] font-semibold leading-[80px]">
           Sign in
@@ -178,12 +179,12 @@ export default function Login() {
 
           <p className="text-center mt-4 text-white">
             {`Don't have an account? `}
-            <span
+            <Link
+              href={"/auth/signup"}
               className="cursor-pointer text-teal-500 hover:text-teal-600 ml-0.5"
-              onClick={() => router.push("/auth/signup")}
             >
               Sign up
-            </span>
+            </Link>
           </p>
         </div>
       </div>

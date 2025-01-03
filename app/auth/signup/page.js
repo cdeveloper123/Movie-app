@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toaster, toasterError } from "../components/Toaster";
-import { signIn } from "next-auth/react";
+import Link from "next/link";
 
 export default function SignUp() {
   const router = useRouter();
@@ -108,7 +108,7 @@ export default function SignUp() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center z-20 relative">
       <div className="w-80">
         <h1 className="text-white text-center text-[64px] font-semibold leading-[80px]">
           Sign up
@@ -197,12 +197,12 @@ export default function SignUp() {
 
           <p className="text-center mt-4 text-white">
             {`Already have an account? `}
-            <span
+            <Link
+              href="/auth/login"
               className="cursor-pointer text-teal-500 hover:text-teal-600 ml-0.5"
-              onClick={() => router.push("/auth/login")}
             >
               Log in
-            </span>
+            </Link>
           </p>
         </div>
       </div>
