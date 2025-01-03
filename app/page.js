@@ -94,7 +94,7 @@ export default function Home() {
               return (
                 <div
                   key={index}
-                  className="w-full flex cursor-pointer h-[450px] sm:h-[450px] md:h-[450px] lg:h-[504px] p-0 lg:p-2 space-y-4 flex-col items-start flex-shrink-0 rounded-xl bg-[#092C39] hover:bg-[#1E414E] backdrop-filter backdrop-blur-[100px] z-10"
+                  className="w-full flex cursor-pointer h-[450px] sm:h-[450px] md:h-[450px] lg:h-[615px] p-0 lg:p-2 space-y-4 flex-col items-start flex-shrink-0 rounded-xl bg-[#092C39] hover:bg-[#1E414E] backdrop-filter backdrop-blur-[100px] z-10"
                   onClick={(e) => {
                     e.preventDefault();
                     router.push(`/movies/${item._id}`);
@@ -102,13 +102,13 @@ export default function Home() {
                 >
                   <div>
                     <Image
-                      src={`/uploads/${item.poster}`}
+                      src={item.poster}
                       alt="post"
                       width={400}
                       height={350}
                       sizes="100vw"
                       priority={true}
-                      className="w-[400px]  rounded-t-lg lg:rounded-xl h-[350px] sm:h-[350px] lg:h-[400px]"
+                      className="w-[400px]  rounded-t-lg lg:rounded-xl h-[350px] sm:h-[350px] lg:h-[500px]"
                     />
                     <h2 className="py-1 p-2 lg:p-2 lg:py-3 font-medium text-white text-base lg:text-xl leading-8">
                       {item.title}

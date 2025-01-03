@@ -94,9 +94,9 @@ export default function MovieEditor() {
   };
 
   const validatePublishingYear = () => {
-    if (publishingYear > 2028) {
+    if (publishingYear > 2025) {
       setPublishingYearError(
-        "Publishing year must be less than or equal to 2028"
+        "Publishing year must be less than or equal to 2025"
       );
       return false;
     } else if (publishingYear == "") {
@@ -220,7 +220,7 @@ export default function MovieEditor() {
             <div className="text-center">
               {file || movie?.poster ? (
                 <Image
-                  src={file || `/uploads/${movie.poster}`}
+                  src={file || movie.poster}
                   width={400}
                   height={350}
                   alt="preview"

@@ -1,54 +1,63 @@
 import connectMongo from "@/lib/mongodb";
 import Movie from "@/models/Movie";
-import path from "path";
-import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
+import cloudinary from "cloudinary";
+import { Readable } from "stream";
 
-const UPLOAD_DIR = path.resolve(process.env.ROOT_PATH ?? "", "public/uploads");
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export const POST = async (req) => {
   await connectMongo();
 
   const formData = await req.formData();
-
   const body = Object.fromEntries(formData);
   const file = body.file || null;
 
   if (file) {
-    const buffer = Buffer.from(await file.arrayBuffer());
-    if (!fs.existsSync(UPLOAD_DIR)) {
-      fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-    }
-
-    const uniqueName = `${uuidv4()}${path.extname(file.name)}`;
-    const filePath = path.resolve(UPLOAD_DIR, uniqueName);
-
-    fs.writeFileSync(filePath, buffer);
-
-    const movieData = {
-      ...body,
-      posterUrl: `/uploads/${uniqueName}`,
-    };
-
     try {
-      const {
-        title,
-        publishingYear,
-        file: { name: poster },
-      } = movieData;
+      const buffer = Buffer.from(await file.arrayBuffer());
+      const readableStream = Readable.from(buffer);
+
+      const uploadResponse = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.v2.uploader.upload_stream(
+          {
+            folder: "movie-posters",
+            public_id: uuidv4(),
+          },
+          (error, result) => {
+            if (error) {
+              return reject(error);
+            }
+            resolve(result);
+          }
+        );
+        readableStream.pipe(uploadStream);
+      });
+
+      const posterUrl = uploadResponse.secure_url;
+      const movieData = {
+        ...body,
+        posterUrl,
+      };
+
+      const { title, publishingYear } = movieData;
 
       const movie = await Movie.create({
         title,
         publishingYear,
-        poster: uniqueName,
+        poster: posterUrl,
       });
 
       return new Response(JSON.stringify({ success: true, movie }), {
         status: 201,
       });
     } catch (error) {
-      console.error("Error creating movie:", error);
-      return new Response(JSON.stringify({ error: "Failed to create movie" }), {
+      console.error("Error uploading to Cloudinary:", error);
+      return new Response(JSON.stringify({ error: "Failed to upload image" }), {
         status: 500,
       });
     }
@@ -65,14 +74,12 @@ export async function GET(req) {
 
   const url = new URL(req.url);
   const page = parseInt(url.searchParams.get("page") || "1", 10);
-  const limit = 12; 
-  
+  const limit = 12;
+
   try {
     const skip = (page - 1) * limit;
 
-    const movies = await Movie.find()
-      .skip(skip)
-      .limit(limit);
+    const movies = await Movie.find().skip(skip).limit(limit);
 
     const totalMovies = await Movie.countDocuments();
 
@@ -83,10 +90,10 @@ export async function GET(req) {
         items: movies,
       },
       meta: {
-        page, 
-        limit, 
-        totalMovies, 
-        totalPages, 
+        page,
+        limit,
+        totalMovies,
+        totalPages,
       },
     };
 
@@ -104,7 +111,7 @@ export const PUT = async (req) => {
 
   const formData = await req.formData();
   const body = Object.fromEntries(formData);
-  
+
   const { id, ...data } = body;
   const file = body.file || null;
 
@@ -112,44 +119,70 @@ export const PUT = async (req) => {
     try {
       const buffer = Buffer.from(await file.arrayBuffer());
 
-      if (!fs.existsSync(UPLOAD_DIR)) {
-        fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-      }
+      const uploadResponse = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.v2.uploader.upload_stream(
+          {
+            folder: "movie-posters",
+            public_id: uuidv4(), 
+          },
+          (error, result) => {
+            if (error) {
+              return reject(error);
+            }
+            resolve(result);
+          }
+        );
 
-      const uniqueName = `${uuidv4()}${path.extname(file.name)}`;
-      const filePath = path.resolve(UPLOAD_DIR, uniqueName);
+        const readableStream = Readable.from(buffer);
+        readableStream.pipe(uploadStream);
+      });
 
-      fs.writeFileSync(filePath, buffer);
+      data.poster = uploadResponse.secure_url;
 
-      data.poster = uniqueName;
-
-      const updatedMovie = await Movie.findByIdAndUpdate(id, data, { new: true });
+      const updatedMovie = await Movie.findByIdAndUpdate(id, data, {
+        new: true,
+      });
 
       if (!updatedMovie) {
-        return new Response(JSON.stringify({ error: 'Movie not found' }), { status: 404 });
+        return new Response(JSON.stringify({ error: "Movie not found" }), {
+          status: 404,
+        });
       }
 
-      return new Response(JSON.stringify({ success: true, movie: updatedMovie }), { status: 200 });
+      return new Response(
+        JSON.stringify({ success: true, movie: updatedMovie }),
+        { status: 200 }
+      );
     } catch (error) {
       console.error("Error updating movie:", error);
-      return new Response(JSON.stringify({ error: 'Failed to update movie' }), { status: 500 });
+      return new Response(JSON.stringify({ error: "Failed to update movie" }), {
+        status: 500,
+      });
     }
   } else {
     try {
-      const updatedMovie = await Movie.findByIdAndUpdate(id, data, { new: true });
+      const updatedMovie = await Movie.findByIdAndUpdate(id, data, {
+        new: true,
+      });
 
       if (!updatedMovie) {
-        return new Response(JSON.stringify({ error: 'Movie not found' }), { status: 404 });
+        return new Response(JSON.stringify({ error: "Movie not found" }), {
+          status: 404,
+        });
       }
 
-      return new Response(JSON.stringify({ success: true, movie: updatedMovie }), { status: 200 });
+      return new Response(
+        JSON.stringify({ success: true, movie: updatedMovie }),
+        { status: 200 }
+      );
     } catch (error) {
       console.error("Error updating movie:", error);
-      return new Response(JSON.stringify({ error: 'Failed to update movie' }), { status: 500 });
+      return new Response(JSON.stringify({ error: "Failed to update movie" }), {
+        status: 500,
+      });
     }
   }
 };
-
 
 export async function DELETE(req) {
   await connectMongo();
