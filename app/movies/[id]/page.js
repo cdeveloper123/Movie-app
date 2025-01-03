@@ -94,12 +94,7 @@ export default function MovieEditor() {
   };
 
   const validatePublishingYear = () => {
-    if (publishingYear > 2025) {
-      setPublishingYearError(
-        "Publishing year must be less than or equal to 2025"
-      );
-      return false;
-    } else if (publishingYear == "") {
+    if (publishingYear == "") {
       setPublishingYearError("Publishing year must not be blank");
       return false;
     }

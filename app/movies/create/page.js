@@ -67,11 +67,10 @@ const MoviesCreate = () => {
     }
     if (publishingYear === "") {
       setPublishingYearError("Publishing Year can't be blank");
-    } else if (publishingYear > 2025) {
-      setPublishingYearError("Publishing Year must be less than or equal to 2025");
     } else {
       setPublishingYearError("");
     }
+    console.log("hereeee", posterError || titleError || publishingYearError);
 
     if (posterError || titleError || publishingYearError) {
       return;
