@@ -94,7 +94,7 @@ export default function Login() {
           Sign in
         </h1>
 
-        <div className="mt-10">
+        <div className="mt-10 px-2">
           <div>
             <input
               type="text"

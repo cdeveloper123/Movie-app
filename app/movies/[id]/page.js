@@ -70,7 +70,7 @@ export default function MovieEditor() {
       };
 
       reader.readAsDataURL(selectedFile);
-      setPoster(selectedFile); 
+      setPoster(selectedFile);
     } else {
       setPosterError("Please select a valid image file.");
     }
@@ -280,18 +280,18 @@ export default function MovieEditor() {
               </p>
             </div>
             <br />
-            <div className="flex justify-between space-x-5 lg:space-x-3.5">
+            <div className="flex sm:w-[80%] flex-col sm:flex-row justify-between sm:space-x-5 space-y-4 sm:space-y-0 lg:space-x-3.5 mx-auto">
               <button
                 onClick={() => {
                   router.push("/");
                 }}
-                className="w-[171px] h-14 items-center px-6 py-4 rounded-[10px] border border-white text-white font-bold text-base text-center"
+                className="w-full sm:w-[250px] h-14 px-6 py-4 rounded-[10px] border border-white text-white font-bold text-base text-center"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSubmit}
-                className="w-[171px] h-14 items-center px-6 py-4 rounded-[10px] bg-[#2BD17E] text-white font-bold text-base text-center"
+                className="w-full sm:w-[250px] h-14 px-6 py-4 rounded-[10px] bg-[#2BD17E] text-white font-bold text-base text-center"
               >
                 Update
               </button>

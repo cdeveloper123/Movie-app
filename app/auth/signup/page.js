@@ -108,7 +108,7 @@ export default function SignUp() {
           Sign up
         </h1>
 
-        <div className="mt-10">
+        <div className="mt-10 px-2">
           <div>
             <input
               type="text"
