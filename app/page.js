@@ -25,7 +25,7 @@ export default function Home() {
   const fetchMovies = async (page) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/movies?page=${page}&limit=8`);
+      const res = await fetch(`/api/movies?page=${page}&limit=10`);
       const data = await res.json();
       setMovies(data);
       setTotalPages(data?.meta?.totalPages);
