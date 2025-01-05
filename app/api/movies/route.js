@@ -76,14 +76,17 @@ export async function GET(req) {
 
   const url = new URL(req.url);
   const page = parseInt(url.searchParams.get("page") || "1", 10);
-  const limit = 12;
+  const limit = parseInt(url.searchParams.get("limit") || "8", 10);
 
   try {
     const skip = (page - 1) * limit;
     const userId = url.searchParams.get("user");
     const query = userId ? { user: new mongoose.Types.ObjectId(userId) } : {};
 
-    const movies = await Movie.find().skip(skip).limit(limit);
+    const movies = await Movie.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
 
     const totalMovies = await Movie.countDocuments();
 

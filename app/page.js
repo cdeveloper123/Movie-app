@@ -25,7 +25,7 @@ export default function Home() {
   const fetchMovies = async (page) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/movies?page=${page}&limit=10`);
+      const res = await fetch(`/api/movies?page=${page}&limit=8`);
       const data = await res.json();
       setMovies(data);
       setTotalPages(data?.meta?.totalPages);
@@ -102,7 +102,7 @@ export default function Home() {
                     router.push(`/movies/${item._id}`);
                   }}
                 >
-                  <div>
+                  <div className="w-full">
                     <Image
                       src={item.poster}
                       alt="post"
@@ -112,7 +112,10 @@ export default function Home() {
                       priority={true}
                       className="w-[400px]  rounded-t-lg lg:rounded-xl h-[350px] sm:h-[350px] lg:h-[500px]"
                     />
-                    <h2 className="py-1 p-2 lg:p-2 lg:py-3 font-medium text-white text-base lg:text-xl leading-8">
+                    <h2
+                      className="py-1 p-2 lg:p-2 lg:py-3 font-medium text-white text-base lg:text-xl leading-8 truncate w-full overflow-hidden whitespace-nowrap text-ellipsis"
+                      title={item.title}
+                    >
                       {item.title}
                     </h2>
                     <p className="text-white font-normal text-sm leading-6 p-2 lg:p-2">
